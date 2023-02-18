@@ -1,0 +1,154 @@
+﻿ @model IEnumerable<PrijaviProblem.Models.Problem>
+
+@{
+    ViewBag.Title = "Index";
+}
+<br />
+
+<div class="row">
+
+    <div class="col-6">
+        <h5> Проблеми во Тетово</h5>
+    </div>
+
+    <div class="col-6" style="text-align:right">
+        <button type="button" class="btn btn-outline-success">
+            <a href="/Problems/Create" style="text-decoration:none;">Пријави проблем</a>
+        </button>
+    </div>
+
+</div>
+
+<br />
+
+<table class="table" id="problemTable">
+    <thead class="table-success">
+        <tr>
+            <th> Слика </th>
+            <th>
+                Име на проблем
+            </th>
+            <th>
+                Детален опис 
+            </th>
+            <th>
+                Статус
+            </th>
+            <th>
+                Акции
+            </th>
+        </tr>
+    </thead>
+
+    <tbody class="table-secondary">
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <img src="@Url.Content("~/img/" + item.Img)" alt="img" style="max-height:100px" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td style="text-align:center">
+                @if (User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("Измени", "Edit", new { id = item.Id }, new { @class = "btn btn-light", style = "text-decoration:none;" })
+                    <button type="button" class="btn btn-danger" data-problem-id="@(item.Id)"
+                            data-toggle="modal" data-target="#exampleModal" style="text-decoration:none;">
+                        Избриши
+                    </button>
+                    @*@Html.ActionLink("Избриши", "Delete", new { id = item.Id }, new { @class = "btn btn-danger"  })*@
+                    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Избриши проблем</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Дали сакате да го избришете селектираниот проблем?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary">
+                                        @Html.ActionLink("Избриши", "Delete", new { id = item.Id }, new { style = "color: white; text-decoration:none;" })
+                                    </button>
+                                    <button type="button" class="btn btn-secondary">
+                                        @Html.ActionLink("Затвори", "Index", new { id = item.Id }, new { style = "text-decoration:none;" })
+                                    </button>
+                                    @*<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.ActionLink("Разгледај!", "Details", new { id = item.Id }, new { @class = "btn btn-light", style = "text-decoration:none;" })
+                }
+            </td>
+            
+
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+@*
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Modal Body
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+@section scripts{
+    
+    <script>
+        $(document).ready(function () {
+            var table = $("#problemTable").DataTable();
+            $("#problemTable .js-delete").on("click", function () {
+                var button = $(this);
+                bootbox.confirm("Дали сакате да го избришете селектираниот проблем?", function (result) {
+                    console.log("Clicked on delete button.");
+                    if (result) {
+                        $.ajax({
+                            url: "/Problems/Delete/" + button.attr("data-problem-id"),
+                            method: "GET",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            },
+                            error: function (error) {
+                                console.log(error);
+                            }
+                        });
+                    }
+                });
+            })
+        });
+
+    </script>
+    
+}

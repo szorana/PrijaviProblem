@@ -1,0 +1,39 @@
+﻿@model PrijaviProblem.Models.AddToRoleModel
+@{
+    ViewBag.Title = "AddUserToRole";
+}
+
+<br />
+<h4>Додели улога на корисник со следниот маил</h4>
+
+@using (Html.BeginForm("AddUserToRole", "Account"))
+{
+
+    <div class="row">
+
+        <div class="col-6">
+            <div class="form-group">
+                Емаил
+                <div>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="form-group">
+                Улога
+                <div>
+                    @Html.DropDownListFor(m => m.selectedRole, new SelectList(Model.Roles), new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+    <div class="form-group"> 
+        <button type="submit" class="btn btn-success">Зачувај</button>
+    </div>
+}
+

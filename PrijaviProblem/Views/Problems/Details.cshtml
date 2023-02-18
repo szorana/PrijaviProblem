@@ -1,0 +1,71 @@
+﻿@model PrijaviProblem.Models.Problem
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<br />
+<h2>Детали.</h2>
+
+<div>
+    <hr />
+
+    <div class="row">
+
+        <div class="col-6">
+            <dl>
+                <dt>
+                    Име на проблемот:
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt>
+                    Краток опис:
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+
+                <dt>
+                    Статус:
+                </dt>
+
+                <dd>
+                      <span class="badge rounded-pill bg-success" style="padding:13px">
+                                @Html.DisplayFor(model => model.Status)
+                      </span>
+                    
+
+                </dd>
+            </dl>
+
+        </div>
+
+        <div class="col-6">
+            <dl>
+                <dt>
+                    Слика:
+                </dt>
+
+                <dd>
+                    <img alt="problemImage" src="@Url.Content("~/img/" + Model.Img)" style="max-height: 350px" />
+                </dd>
+            </dl>
+
+        </div>
+
+
+    </div>
+</div>
+<p>
+    @if (User.IsInRole("Admin") || User.IsInRole("User"))
+    {
+        @Html.ActionLink("Измени", "Edit", new { id = Model.Id })
+    }
+    |
+    @Html.ActionLink("Назад кон листата.", "Index")
+</p>

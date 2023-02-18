@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+    @Html.AntiForgeryToken()
+
+<ul class="nav navbar-nav navbar-right">
+    <li class="btn btn-primary btn-success btn-sm" style=" text-decoration:none;">
+        @Html.ActionLink("Здраво " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", style = "text-decoration:none;" })
+    </li>
+    @if ((User.IsInRole("Admin")) )
+    {
+        <li class="btn btn-primary btn-sm" >
+            <a href="/Account/AddUserToRole" style="color:white; text-decoration:none;">Избери улога</a>
+        </li>
+    }
+    <li><a class="btn btn-primary btn-sm"  href="javascript:document.getElementById('logoutForm').submit()">Одјави се.</a></li>
+</ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+            @Html.ActionLink("Регистрирај се.", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+        </button>
+        </li>
+        <li class="nav-item">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+                @Html.ActionLink("Најави се.", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+            </button>
+        </li>
+    </ul>
+}
